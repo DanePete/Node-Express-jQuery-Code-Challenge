@@ -1,10 +1,17 @@
-const express = require( 'express' );
+const express = require('express');
+const bodyParser = require('body-parser');
+const { response } = require('express');
 const app = express();
-const bodyParser = require( 'body-parser' );
 const PORT = 5000;
 
-// use bodyParser.urlencoded throughout the app with this:
-app.use(bodyParser.urlencoded({ extended: true }));
+// Get Response from client
+
+// This must be added before GET & POST routes.
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}))
+
+// Serve up static files (HTML, CSS, Client JS)
+app.use(express.static('server/public'));
 
 let jokes = [
   {
@@ -34,8 +41,26 @@ let jokes = [
   }
 ];
 
-// serve back static files
-app.use(express.static('server/public'));
+/**
+ * Server Side Post Joke
+ * Gets the new joke and pushes it in the the jokes array
+ */
+app.post('/postjoke', function(request, response) {
+  let joke = request.body;
+  console.log('server joke response', joke);
+  console.log('got here');
+  jokes.push(joke);
+  //console.log('jokes after array oush', jokes);
+  console.log('jokes in server', jokes);
+});
+
+/**
+ * Get Jokes
+ * Sends the jokes array back to the client
+ */
+app.get('/getjokes', function(request, response) {
+  response.send(jokes);
+});
 
 app.listen(PORT, () => {
   console.log('server running on: ', PORT);
