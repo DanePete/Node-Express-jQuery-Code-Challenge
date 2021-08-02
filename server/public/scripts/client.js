@@ -4,7 +4,7 @@ $( document ).ready( onReady );
 
 function onReady() {
     $(document).on('click', '#addJokeButton', getInputValues);
-    getJokes();
+    getJokes(); // call get jokes to load the server data to the dom on page load
 }
 
 /**
